@@ -1,5 +1,4 @@
 
-import sklearn
 import streamlit as st
 import numpy as np
 import pandas as pd 
@@ -11,11 +10,15 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 
+from sklearn.model_selection import train_test_split
+
+from sklearn import metrics
+
 st.title("Supervised Machine Learning")
 
 st.write("""
-## Classification Models...
-+ Find the best performing model
+    ## Classification Models...
+    + Find the best performing model
 """
 )
 
@@ -28,8 +31,14 @@ classifier = st.sidebar.selectbox("Select Classification Model", ('Decision Tree
 if classifier == 'Decision Tree':
     clf = DecisionTreeClassifier(random_state=11)
 
-else:
+elif classifier == 'Random Forest':
     clf = RandomForestClassifier(random_state=12)
+
+elif classifier == 'KNN':
+    clf = KNeighborsClassifier()
+
+else: 
+    clf = SVC()
 
 st.write('Classification Model >> ', classifier)
 
@@ -42,22 +51,38 @@ elif dataset == 'Breast Cancer':
 else: 
     data = datasets.load_wine()
 
-X = data.data
-y = data.target 
+st.write(f"+ Overview of {dataset} dataset", data)
 
+st.write("Training Featuers: ", )
+# Training Features
+X = pd.DataFrame(data.data, columns = data.feature_names)
+
+y = np.array(data.target) 
+
+features = X.columns
 
 st.write(X[:7])
 st.write("Shape of the data >> ", X.shape)
 st.write("Number of classes >> ", len(np.unique(y)))
+st.write('Target Values: ', data.target_names)
 
-st.write('## Model Building...')
+st.write('## Model Building & Validation')
 
-def train_clf(df, clf):
-    train = df.sample(frac = 0.8)
-    valid = df.drop(train.index)
+X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size = 0.2)
 
-    return train, valid 
+st.write(f"""
+    + Training Data : {X_train.shape}
+    + Validation Data : {X_valid.shape}
+""")
 
-st.write(f"Training Data: \n")
+model = clf.fit(X_train, y_train)
 
-# train, valid = train_clf(data, clf)
+st.write("Fitted ", model)
+
+model_preds = model.predict(X_valid)
+confusion_matrix = metrics.confusion_matrix(y_valid, model_preds)
+model_acc = metrics.accuracy_score(y_valid, model_preds)
+
+st.write("Confusion Matrix", confusion_matrix)
+st.write('Accuracy: ', model_acc)
+
