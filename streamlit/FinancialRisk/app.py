@@ -5,6 +5,7 @@ import pandas as pd
 # from matplotlib import pyplot as plt 
 
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC 
 from sklearn.neighbors import KNeighborsClassifier
@@ -53,10 +54,12 @@ st.write(f'''
 st.write('+ Descriptive statistics', data.describe())
 
 st.write('+ Missing values per column', data.isnull().sum())
-
+st.write('Target variable distribution')
 st.bar_chart(data['IsUnderRisk'].value_counts())
 
-model = st.selectbox('Select Model', ('DecisionTreeClassifier', 'LogisticRegression', 'SupportVectorClassifier', 'KNeighborsClassifier'))
+model = st.selectbox('Select Model', 
+('LogisticRegression', 'DecisionTreeClassifier', 'SupportVectorClassifier', 
+'RandomForestClassifier', 'KNeighborsClassifier'))
 
 st.write('Selected Model: ', model)
 
@@ -71,13 +74,17 @@ X_valid, y_valid = valid.drop('IsUnderRisk', axis=1), valid.IsUnderRisk
 
 # Model Selection
 
-if model == 'DecisionTreeClassifier':
+if model == 'LogisticRegression':
+    st.write('### Training a LogisticRegression model')
+    model = LogisticRegression()
+
+elif model == 'DecisionTreeClassifier':
     st.write('### Training a DecisionTreeCassifier')
     model = DecisionTreeClassifier(random_state = 11)
 
-elif model == 'LogisticRegression':
-    st.write('### Training a LogisticRegression model')
-    model = LogisticRegression()
+elif model == 'RandomForestClassifier':
+    st.write('### Training a RandomForestCassifier')
+    model = RandomForestClassifier(random_state=11)
 
 elif model == 'SupportVectorClassifier':
     st.write('### Training a SupportVectorClassifier')
@@ -111,6 +118,10 @@ st.write('Model Accuracy: ', acc)
 cm = confusion_matrix(y_valid, preds)
 st.write('Confusion Matrix', cm)
 
+# Cross-Validation
 
+st.write('''
+    ## Model Interpretability
+''')
 
 
