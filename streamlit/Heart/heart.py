@@ -1,6 +1,13 @@
+from sklearn.model_selection import train_test_split
 import streamlit as st
 import pandas as pd
 
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+
+from sklearn import metrics
 
 data = pd.read_csv('heart.csv')
 
@@ -37,14 +44,39 @@ st.write(data.head(8), '''Data Labels
 ''')
 
 
+st.write('''
+    ## Supervised Machine Learning Classifiers used
+    + DecisionTreeClassifier
+    + RandomForestClassifier
+    + KNNClassifier
+    + SVClassifier
+''')
 
+st.write('### DecisionTreeClassifier')
 
+X = data.drop('output', axis=1)
+y = data.output
 
+X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.2)
 
+model_dt = DecisionTreeClassifier()
 
+st.write(model_dt.fit(X_train, y_train))
 
+preds_dt = model_dt.predict(X_valid)
 
+acc_dt = metrics.accuracy_score(y_valid, preds_dt)
+st.write('DecisionTree Accuracy: ', acc_dt)
 
+st.write('### RandomForestClassifier')
+
+model_rf = RandomForestClassifier()
+st.write(model_rf.fit(X_train, y_train))
+
+preds_rf = model_rf.predict(X_valid)
+
+acc_rf = metrics.accuracy_score(y_valid, preds_rf)
+st.write('RandomForest Accuracy: ', acc_rf)
 
 
 

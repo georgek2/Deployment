@@ -1,3 +1,4 @@
+from attr import s
 import streamlit as st
 import pandas as pd
 
@@ -118,7 +119,9 @@ st.write('Model Accuracy: ', acc)
 cm = confusion_matrix(y_valid, preds)
 st.write('Confusion Matrix', cm)
 
-# Cross-Validation
+# Classification Report
+# class_report = classification_report(y_valid, preds)
+# st.write(class_report)
 
 st.write('''
     ## Model Interpretability
