@@ -2,6 +2,10 @@ from sklearn.model_selection import train_test_split
 import streamlit as st
 import pandas as pd
 
+# Graphics
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -51,6 +55,19 @@ st.write('''
     + KNNClassifier
     + SVClassifier
 ''')
+
+st.write('## Exploratory Data Science')
+
+st.write(f'+ Correlation Matrix')
+fig, ax = plt.subplots()
+sns.heatmap(data.corr(), ax=ax)
+st.write(fig)
+
+st.write(f'''+ Output Distribution
+''')
+fig, ax = plt.subplots()
+sns.histplot(data.output, ax=ax)
+st.write(fig)
 
 st.write('### DecisionTreeClassifier')
 
