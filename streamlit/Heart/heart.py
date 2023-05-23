@@ -11,6 +11,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 
+from sklearn.preprocessing import StandardScaler
+
+
 from sklearn import metrics
 
 data = pd.read_csv('heart.csv')
@@ -96,5 +99,56 @@ acc_rf = metrics.accuracy_score(y_valid, preds_rf)
 st.write('RandomForest Accuracy: ', acc_rf)
 
 
+st.write('## Using Distance-Based Models')
+st.write('### KNN')
+
+model_knn = KNeighborsClassifier()
+
+st.write(model_knn.fit(X_train, y_train))
+
+preds_knn = model_knn.predict(X_valid)
+acc_knn = metrics.accuracy_score(y_valid, preds_knn)
+
+st.write('#### Accuracy: ',acc_knn)
+
+st.write('### SVC')
+
+model_svc = SVC()
+
+st.write(model_svc.fit(X_train, y_train))
+
+preds_svc = model_svc.predict(X_valid)
+acc_svc = metrics.accuracy_score(y_valid, preds_svc)
+
+st.write('#### Accuracy: ',acc_svc)
+
+st.write('## Using Scaled features')
+
+scaler = StandardScaler()
+
+# Scaling input features
+sx_train = scaler.fit_transform(X_train)
+sx_valid = scaler.transform(X_valid)
+
+#KNN
+knn_2 = KNeighborsClassifier()
+knn_2.fit(sx_train, y_train)
+
+preds_knn2 = knn_2.predict(sx_valid)
+k_acc = metrics.accuracy_score(y_valid, preds_knn2)
+
+st.write('### KNN - Scaled')
+st.write('Accuracy: ', k_acc)
+
+# SVC
+svc_2 = SVC()
+svc_2.fit(sx_train, y_train)
+
+preds_svc2 = svc_2.predict(sx_valid)
+svc_acc = metrics.accuracy_score(y_valid, preds_svc2)
+
+st.write('### SVC - Scaled')
+st.write('Accuracy: ', svc_acc)
 
 
+st.write('The accuracy for the distance-based machine learning models improves significantly when input features are scaled')
